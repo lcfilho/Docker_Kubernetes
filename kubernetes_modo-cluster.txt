@@ -1,0 +1,112 @@
+
+nos 3 cluster
+
+#sudo sudo
+
+#yum update
+
+#curl -fsSL https://get.docker.com | bash
+
+#systemctl enable docker
+
+#systemctl start docker
+
+#vim /etc/yum.repos.d/kubernetes.repo
+
+[kubernetes]
+
+name=Kubernetes
+
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+
+enabled=1
+
+gpgcheck=1
+
+repo_gpgcheck=1
+
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+
+# setenforce 0
+
+
+# systemctl stop firewalld
+
+
+# systemctl disable firewalld
+
+
+# yum install -y kubelet kubeadm kubectl
+
+
+# systemctl enable kubelet && systemctl start kubelet
+
+
+Ainda na família do Red Hat, é importante configurar alguns parâmetros de kernel no sysctl:
+
+
+# vim /etc/sysctl.d/k8s.conf
+
+net.bridge.bridge-nf-call-ip6tables = 1
+
+net.bridge.bridge-nf-call-iptables = 1
+
+
+# sysctl --system
+
+
+# docker info | grep -i cgroup
+Cgroup Driver: cgroupfs
+
+#sed -i "s/cgroup-driver=systemd/cgroup-driver=cgroupfs/g" /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
+
+Antes de iniciar o nosso cluster precisamos desabilitar nossa swap, portanto:
+
+# swapoff -a
+
+
+E comente a entrada referente a swap em seu arquivo fstab:
+
+# vim /etc/fstab
+
+			*somente na master
+
+# kubeadm init --apiserver-advertise-address $(hostname -i)
+
+
+# mkdir -p $HOME/.kube
+
+
+# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+
+# sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+no final do codigo ira aparecer esse codigo digitar nos slaves
+
+#kubeadm join 10.150.0.37:6443 --token li1r0v.hznmanuaz7gkpn1s \
+    --discovery-token-ca-cert-hash sha256:100a1dad45bc364755f80ec501e29b19711c3e8c0d87144b9761ed6b255ffa32
+	
+
+no master
+	
+#kubectl get pods -n kube-system
+
+para ver se aparecer os nós
+
+#kubectl get nodes
+
+para cada nó digitar esse comando
+
+#kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
+# systemctl daemon-reload
+
+
+# systemctl restart kubelet
+
+
+
+
+
